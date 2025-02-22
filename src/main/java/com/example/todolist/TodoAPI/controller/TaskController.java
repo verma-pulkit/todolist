@@ -2,7 +2,9 @@ package com.example.todolist.TodoAPI.controller;
 
 import com.example.todolist.TodoAPI.annotations.UserAuthenticated;
 import com.example.todolist.TodoAPI.builders.FailureResponseBuilder;
+import com.example.todolist.TodoAPI.dto.requests.SubTaskCreateRequest;
 import com.example.todolist.TodoAPI.dto.requests.TaskCreateRequest;
+import com.example.todolist.TodoAPI.dto.response.SubTaskDetailsDto;
 import com.example.todolist.TodoAPI.dto.response.TaskDetailsDto;
 import com.example.todolist.TodoAPI.enums.ErrorCode;
 import com.example.todolist.TodoAPI.exception.APIException;
@@ -43,7 +45,6 @@ public class TaskController {
     @UserAuthenticated
     public ResponseEntity<TaskDetailsDto> createTask(HttpServletRequest request, @RequestBody TaskCreateRequest createRequest) {
         try {
-            // ✅ Get user from request attributes (set by the filter)
             User user = (User) request.getAttribute("user");
 
             if (user == null) {
@@ -66,14 +67,14 @@ public class TaskController {
     @UserAuthenticated
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response createSubtask(@Context ContainerRequestContext requestContext, @PathParam("task_id") String taskId, Subtask subtask) {
+    public Response createSubtask(@Context ContainerRequestContext requestContext, @PathParam("task_id") String taskId, SubTaskCreateRequest createRequest) {
         try {
             User user = (User) requestContext.getProperty("user");
-            Task updatedTask = subTaskService.addSubtask(taskId, subtask);
+            SubTaskDetailsDto updatedTask = subTaskService.createSubTask(user, createRequest);
             return Response.ok().entity(updatedTask).build();
-//        } catch (APIException e) {
-//            log.error("Bad request provided {}", e.getMessage(), e);
-//            return FailureResponseBuilder.buildFailureResponse(ErrorCode.INVALID_REQUEST);
+        } catch (APIException e) {
+            log.error("Bad request provided {}", e.getMessage(), e);
+            return FailureResponseBuilder.buildFailureResponse(ErrorCode.INVALID_REQUEST);
         } catch (Exception e) {
             log.error("Unknown exception occurred: {}", e.getMessage(), e);
             return FailureResponseBuilder.buildFailureResponse(ErrorCode.UNKNOWN_SERVER_ERROR);
@@ -99,7 +100,7 @@ public class TaskController {
     }
 
     @PUT
-    @Path("/")
+    @Path("/task/{taskId}")
     @UserAuthenticated
     @Produces(MediaType.APPLICATION_JSON)
     public Response updateTask(@Context ContainerRequestContext requestContext, @PathParam("taskId") String taskId) {

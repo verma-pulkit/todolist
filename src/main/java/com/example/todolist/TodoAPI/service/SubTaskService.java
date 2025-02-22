@@ -40,8 +40,4 @@ public class SubTaskService {
         }
         throw new APIException("Task does not exist for taskId");
     }
-
-    public Task addSubtask(String taskId, Subtask subtask) {
-        return null;
-    }
 }

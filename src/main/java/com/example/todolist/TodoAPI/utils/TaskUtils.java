@@ -31,7 +31,12 @@ public class TaskUtils {
                 .dueDate(task.getDueDate())
                 .priority(task.getPriority())
                 .progressPercentage(getProgressPercentageFromSubtasks(subtaskList))
+                .subTaskDetailsDtoList(getSubTaskDetails(subtaskList))
                 .build();
+    }
+
+    private static List<SubTaskDetailsDto> getSubTaskDetails(List<Subtask> subtaskList) {
+
     }
 
     private static double getProgressPercentageFromSubtasks(List<Subtask> subtaskList) {

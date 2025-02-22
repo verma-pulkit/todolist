@@ -18,14 +18,14 @@ public class SubTaskDao {
     }
 
     public Optional<Subtask> findBySubTask(String subTaskId) {
-        return subTaskRepository.findBySubTaskId(subTaskId);  // ✅ Fetch subtask by subTaskId
+        return subTaskRepository.findBySubTaskId(subTaskId);
     }
 
     public Subtask saveSubTask(Subtask subTaskFromRequest) {
-        return subTaskRepository.save(subTaskFromRequest);  // ✅ Save subtask to MongoDB
+        return subTaskRepository.save(subTaskFromRequest);  //
     }
 
     public List<Subtask> findBySubTasksByTaskId(String taskId) {
-        return subTaskRepository.findByTaskId(taskId);  // ✅ Fetch all subtasks for a task
+        return subTaskRepository.findByTaskId(taskId);  //
     }
 }
